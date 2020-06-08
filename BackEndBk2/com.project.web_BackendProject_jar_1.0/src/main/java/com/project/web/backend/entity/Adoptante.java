@@ -33,7 +33,7 @@ public class Adoptante {
     private String adpContra;
     
     @NotNull
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "adoptante_rol",joinColumns=@JoinColumn(name="AdpID"),inverseJoinColumns=@JoinColumn(name="RolID"))
     private Set<Rol> roles = new HashSet<>();
     
