@@ -13,19 +13,22 @@ import org.springframework.stereotype.Service;
 public class MascotaService {
     @Autowired
     MascotaRepository mascotaRepository;
+
     public List<Mascota> obtenerTodos(){
-        List<Mascota> lista = mascotaRepository.findAll();
+        String es = "P";
+        List<Mascota> lista = mascotaRepository.findByMasEstado(es);
         return lista;
     }
     
-    public Optional<Mascota> obtenerPorId(Integer id){
-        return mascotaRepository.findById(id);
+    public Mascota obtenerPorId(Integer id){
+        return mascotaRepository.findByMasID(id);
     }
     
     public Optional<Mascota> obtenerPorNombre(String nombre){
         return mascotaRepository.findByMasNombre(nombre);
     }
     public void guardar(Mascota mascota){
+        mascota.setMasEstado("P");
         mascotaRepository.save(mascota);
     }
     
@@ -38,5 +41,10 @@ public class MascotaService {
     public boolean existePorId(Integer id){
         return mascotaRepository.existsById(id);
     }
+
+    public void actualizar(Mascota mascota){
+        mascotaRepository.save(mascota);
+    }
+    
     
 }

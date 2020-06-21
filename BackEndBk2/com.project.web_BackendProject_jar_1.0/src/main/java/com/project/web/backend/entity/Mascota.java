@@ -30,13 +30,18 @@ public class Mascota {
     @Column(length = 300)
     private String masDesc;
     @NotBlank
+    private String masFoto;
+    @NotBlank
+    private String masEstado;
+    @NotBlank
     private Integer volID;
 
     
     public Mascota() {
     }
 
-    public Mascota(String masNombre, String masSexo, String masTamano, Integer masEdad, String masTpPelo, String masActiv, String masDesc,Integer volID) {
+    public Mascota(Integer masID, String masNombre, String masSexo, String masTamano, Integer masEdad, String masTpPelo, String masActiv, String masDesc, String masFoto, String masEstado, Integer volID) {
+        this.masID = masID;
         this.masNombre = masNombre;
         this.masSexo = masSexo;
         this.masTamano = masTamano;
@@ -44,71 +49,91 @@ public class Mascota {
         this.masTpPelo = masTpPelo;
         this.masActiv = masActiv;
         this.masDesc = masDesc;
+        this.masFoto = masFoto;
+        this.masEstado = masEstado;
         this.volID = volID;
     }
 
-    public Integer getmasID() {
+    public String getMasEstado() {
+        return masEstado;
+    }
+
+    public void setMasEstado(String masEstado) {
+        this.masEstado = masEstado;
+    }
+
+
+
+    public Integer getMasID() {
         return masID;
     }
 
-    public void setmasID(Integer masID) {
+    public void setMasID(Integer masID) {
         this.masID = masID;
     }
 
-    public String getmasNombre() {
+    public String getMasNombre() {
         return masNombre;
     }
 
-    public void setmasNombre(String masNombre) {
+    public void setMasNombre(String masNombre) {
         this.masNombre = masNombre;
     }
 
-    public String getmasSexo() {
+    public String getMasSexo() {
         return masSexo;
     }
 
-    public void setmasSexo(String masSexo) {
+    public void setMasSexo(String masSexo) {
         this.masSexo = masSexo;
     }
 
-    public String getmasTamano() {
+    public String getMasTamano() {
         return masTamano;
     }
 
-    public void setmasTamano(String masTamano) {
+    public void setMasTamano(String masTamano) {
         this.masTamano = masTamano;
     }
 
-    public Integer getmasEdad() {
+    public Integer getMasEdad() {
         return masEdad;
     }
 
-    public void setmasEdad(Integer masEdad) {
+    public void setMasEdad(Integer masEdad) {
         this.masEdad = masEdad;
     }
 
-    public String getmasTpPelo() {
+    public String getMasTpPelo() {
         return masTpPelo;
     }
 
-    public void setmasTpPelo(String masTpPelo) {
+    public void setMasTpPelo(String masTpPelo) {
         this.masTpPelo = masTpPelo;
     }
 
-    public String getmasActiv() {
+    public String getMasActiv() {
         return masActiv;
     }
 
-    public void setmasActiv(String masActiv) {
+    public void setMasActiv(String masActiv) {
         this.masActiv = masActiv;
     }
 
-    public String getmasDesc() {
+    public String getMasDesc() {
         return masDesc;
     }
 
-    public void setmasDesc(String masDesc) {
+    public void setMasDesc(String masDesc) {
         this.masDesc = masDesc;
+    }
+
+    public String getMasFoto() {
+        return masFoto;
+    }
+
+    public void setMasFoto(String masFoto) {
+        this.masFoto = masFoto;
     }
 
     public Integer getVolID() {
@@ -118,6 +143,7 @@ public class Mascota {
     public void setVolID(Integer volID) {
         this.volID = volID;
     }
+
 
     
     

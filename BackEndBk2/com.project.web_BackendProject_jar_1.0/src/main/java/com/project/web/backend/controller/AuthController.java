@@ -5,6 +5,7 @@ import com.project.web.backend.DTO.LoginUsuario;
 import com.project.web.backend.DTO.Mensaje;
 import com.project.web.backend.DTO.NuevoUsuario;
 import com.project.web.backend.entity.Adoptante;
+import com.project.web.backend.entity.Foto;
 import com.project.web.backend.entity.Rol;
 import com.project.web.backend.enums.RolNombre;
 import com.project.web.backend.security.JwtProvider;
@@ -16,6 +17,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,6 +25,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/auth")
+@CrossOrigin("*")
 public class AuthController {
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -79,8 +85,6 @@ public class AuthController {
     
     @PostMapping("/login")
     public ResponseEntity<JwtDTO> login(@Valid @RequestBody LoginUsuario loginUsuario, BindingResult bindingResult){
-        System.out.println("Este es el usuario "+loginUsuario.getNombreUsuario());
-        System.out.println("Este es el pass "+loginUsuario.getPassword());
         if(bindingResult.hasErrors())
             return new ResponseEntity(new Mensaje("campos vacíos o email inválido"),HttpStatus.BAD_REQUEST);
         Authentication authentication = authenticationManager.authenticate(
@@ -88,9 +92,36 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtProvider.generateToken(authentication);
         UserDetails adoptanteDetails = (UserDetails) authentication.getPrincipal();
-        JwtDTO jwtDTO = new JwtDTO (jwt,adoptanteDetails.getUsername(),adoptanteDetails.getAuthorities());
+        JwtDTO jwtDTO = new JwtDTO(jwt,adoptanteDetails.getUsername(),adoptanteDetails.getAuthorities());
         return new ResponseEntity<JwtDTO>(jwtDTO,HttpStatus.OK);
     }
+//    @PreAuthorize("hasRole('USER')")
+//    @PostMapping("/user/{dni}")
+//    public ResponseEntity getFoto(@PathVariable String dni){
+////        if(!mascotaService.existePorId(id))
+////            return new ResponseEntity(new Mensaje("No existe esa mascota"),HttpStatus.NOT_FOUND);
+//        Adoptante adp = adoptanteService.getByDNI(dni).get();
+//        return new ResponseEntity(adp,HttpStatus.OK);
+//    }    
+    
+//    @PreAuthorize("hasRole('USER')")
+//    @GetMapping("/user/{dni}")
+//    public ResponseEntity<Adoptante> getFoto(@PathVariable String dni){
+////        if(!mascotaService.existePorId(id))
+////            return new ResponseEntity(new Mensaje("No existe esa mascota"),HttpStatus.NOT_FOUND);
+//        Adoptante adp = adoptanteService.getByDNI(dni).get();
+//        return new ResponseEntity<Adoptante>(adp,HttpStatus.OK);
+//    }      
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/user/{usuario}")
+    public ResponseEntity getFoto(@PathVariable String usuario){
+//        if(!mascotaService.existePorId(id))
+//            return new ResponseEntity(new Mensaje("No existe esa mascota"),HttpStatus.NOT_FOUND);
+        Adoptante adp = adoptanteService.getByDNI(usuario).get();
+        return new ResponseEntity(adp,HttpStatus.OK);
+    }       
+    
 }
 
 

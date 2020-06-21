@@ -68,5 +68,12 @@ public class WebSecurity extends WebSecurityConfigurerAdapter{
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }
+
+    @Override
+    public void configure(org.springframework.security.config.annotation.web.builders.WebSecurity web) throws Exception {
+      web.ignoring().antMatchers("/v1/mascotas/**");
+    }
+ 
+    
     
 }

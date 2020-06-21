@@ -1,7 +1,9 @@
 package com.project.web.backend.controller;
 import org.apache.commons.lang3.StringUtils;
 import com.project.web.backend.DTO.Mensaje;
+import com.project.web.backend.entity.Foto;
 import com.project.web.backend.entity.Mascota;
+import com.project.web.backend.service.FotoService;
 import com.project.web.backend.service.MascotaService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +12,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 @RestController
-@RequestMapping("/api/mascotas/")
-//@C    rossOrigin("*")
+@RequestMapping("/v1/mascotas/")
+@CrossOrigin("*")
 public class MascotaController {
     @Autowired
     MascotaService mascotaService;
+    @Autowired
+    FotoService fotoService;
     
     @GetMapping("lista")
     public ResponseEntity<List<Mascota>> getLista(){
@@ -23,17 +27,25 @@ public class MascotaController {
     }
     
     @GetMapping("detalle/{id}")
-    public ResponseEntity<Mascota> getOne(@PathVariable Integer id){
+    public ResponseEntity getOne(@PathVariable Integer id){
         if(!mascotaService.existePorId(id))
             return new ResponseEntity(new Mensaje("No existe esa mascota"),HttpStatus.NOT_FOUND);
-        Mascota mascota = mascotaService.obtenerPorId(id).get();
-        return new ResponseEntity<Mascota>(mascota,HttpStatus.OK);
+        Mascota mascota = mascotaService.obtenerPorId(id);
+        return new ResponseEntity(mascota,HttpStatus.OK);
     }
+    
+    @GetMapping("foto/{id}")
+    public ResponseEntity<Foto> getFoto(@PathVariable Integer id){
+//        if(!mascotaService.existePorId(id))
+//            return new ResponseEntity(new Mensaje("No existe esa mascota"),HttpStatus.NOT_FOUND);
+        Foto foto = fotoService.getFoto(id).get();
+        return new ResponseEntity<Foto>(foto,HttpStatus.OK);
+    }    
     
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("nuevo")
     public ResponseEntity<?> create(@RequestBody Mascota mascota){
-        if(StringUtils.isBlank(mascota.getmasNombre()))
+        if(StringUtils.isBlank(mascota.getMasNombre()))
             return new ResponseEntity(new Mensaje("El nombre es obligatorio"), HttpStatus.BAD_REQUEST);
 //        if(StringUtils.isBlank(mascota.getActividad()))
 //            return new ResponseEntity(new Mensaje("La actividad es obligatoria"), HttpStatus.BAD_REQUEST);
@@ -56,9 +68,9 @@ public class MascotaController {
 //        if(productoService.existePorNombre(producto.getNombreProducto()) &&
 //                productoService.obtenerPorNombre(producto.getNombreProducto()).get().getId() != id)
 //            return new ResponseEntity(new Mensaje("ese nombre ya existe"), HttpStatus.BAD_REQUEST);
-        Mascota masUpdate = mascotaService.obtenerPorId(id).get();
-        masUpdate.setmasNombre(mascota.getmasNombre());
-        masUpdate.setmasTamano(mascota.getmasTamano());
+        Mascota masUpdate = mascotaService.obtenerPorId(id);
+        masUpdate.setMasNombre(mascota.getMasNombre());
+        masUpdate.setMasTamano(mascota.getMasTamano());
         mascotaService.guardar(masUpdate);
         return new ResponseEntity(new Mensaje("Mascota actualizada"), HttpStatus.CREATED);
     }
@@ -70,6 +82,7 @@ public class MascotaController {
         mascotaService.borrar(id);
         return new ResponseEntity(new Mensaje("mascota eliminado"), HttpStatus.OK);
     }    
+ 
     
 }
 
